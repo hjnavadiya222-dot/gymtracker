@@ -65,6 +65,7 @@ const Admin = () => {
             <table className="w-full text-left" style={{ borderCollapse: 'collapse' }}>
               <thead>
                 <tr style={{ borderBottom: '1px solid var(--border)' }}>
+                  <th className="p-3">Username</th>
                   <th className="p-3">Email</th>
                   <th className="p-3">Role</th>
                   <th className="p-3">Joined</th>
@@ -74,6 +75,7 @@ const Admin = () => {
               <tbody>
                 {users.map(u => (
                   <tr key={u._id} style={{ borderBottom: '1px solid var(--glass-border)' }}>
+                    <td className="p-3">{u.username || '-'}</td>
                     <td className="p-3">{u.email}</td>
                     <td className="p-3">
                       <span style={{ padding: '0.25rem 0.5rem', borderRadius: '4px', backgroundColor: u.role === 'admin' ? 'rgba(239, 68, 68, 0.2)' : 'rgba(99, 102, 241, 0.2)', color: u.role === 'admin' ? 'var(--danger)' : 'var(--primary)', fontSize: '0.875rem' }}>
