@@ -33,7 +33,7 @@ const Progress = () => {
     if (window.confirm('Are you sure you want to delete this workout log?')) {
       try {
         const config = { headers: { Authorization: `Bearer ${user.token}` } };
-        await axios.delete(`http://localhost:5005/api/workout/logs/${id}`, config);
+        await axios.delete(`${import.meta.env.VITE_API_URL || 'http://localhost:5005'}/api/workout/logs/${id}`, config);
         setLogs(logs.filter(log => log._id !== id));
       } catch (error) {
         console.error('Error deleting log:', error);
@@ -87,7 +87,7 @@ const Progress = () => {
         </div>
       ) : (
         <div className="grid grid-cols-3 gap-8">
-          <div className="glass-panel p-6" style={{ gridColumn: 'span 1' }}>
+          <div className="glass-panel p-6 col-span-full md-col-span-1">
             <h3 className="mb-4">Select Exercise</h3>
             <div className="flex flex-col gap-2">
               {exercises.map(ex => (
@@ -103,7 +103,7 @@ const Progress = () => {
             </div>
           </div>
           
-          <div className="glass-panel p-6" style={{ gridColumn: 'span 2' }}>
+          <div className="glass-panel p-6 col-span-full md-col-span-2">
             <h3 className="mb-4">Max Weight Trend</h3>
             <div style={{ width: '100%', height: '400px' }}>
               <ResponsiveContainer width="100%" height="100%">
@@ -123,7 +123,7 @@ const Progress = () => {
           </div>
 
           {/* Workout History Table */}
-          <div className="glass-panel p-6 mt-8" style={{ gridColumn: 'span 3' }}>
+          <div className="glass-panel p-6 mt-8 col-span-full md-col-span-3">
             <h3 className="mb-4">Recent Workout History</h3>
             <div style={{ overflowX: 'auto', maxHeight: '400px' }}>
               <table className="w-full text-left" style={{ borderCollapse: 'collapse' }}>
