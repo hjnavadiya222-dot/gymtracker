@@ -14,7 +14,7 @@ const Progress = () => {
     const fetchProgress = async () => {
       try {
         const config = { headers: { Authorization: `Bearer ${user.token}` } };
-        const { data } = await axios.get('http://localhost:5005/api/workout/progress', config);
+        const { data } = await axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:5005'}` + '/api/workout/progress', config);
         setLogs(data);
         if (data.length > 0) {
           // Find first exercise ID to default select

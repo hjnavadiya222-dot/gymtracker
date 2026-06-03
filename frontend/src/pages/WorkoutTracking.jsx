@@ -49,7 +49,7 @@ const WorkoutTracking = () => {
       });
 
       if (payload.length > 0) {
-        await axios.post('http://localhost:5005/api/workout/logs', { logs: payload }, config);
+        await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:5005'}` + '/api/workout/logs', { logs: payload }, config);
         setSuccess(true);
         setTimeout(() => {
           navigate('/');

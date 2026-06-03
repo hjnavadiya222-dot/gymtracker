@@ -14,8 +14,8 @@ const Admin = () => {
       try {
         const config = { headers: { Authorization: `Bearer ${user.token}` } };
         const [usersRes, logsRes] = await Promise.all([
-          axios.get('http://localhost:5005/api/admin/users', config),
-          axios.get('http://localhost:5005/api/admin/logs', config)
+          axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:5005'}` + '/api/admin/users', config),
+          axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:5005'}` + '/api/admin/logs', config)
         ]);
         setUsers(usersRes.data);
         setLogs(logsRes.data);

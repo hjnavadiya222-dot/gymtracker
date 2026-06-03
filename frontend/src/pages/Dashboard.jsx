@@ -14,7 +14,7 @@ const Dashboard = () => {
     const fetchRoutines = async () => {
       try {
         const config = { headers: { Authorization: `Bearer ${user.token}` } };
-        const { data } = await axios.get('http://localhost:5005/api/workout/routines', config);
+        const { data } = await axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:5005'}` + '/api/workout/routines', config);
         // Sort routines appropriately based on Day 1, Day 2 etc
         setRoutines(data.sort((a, b) => a.dayOfWeek.localeCompare(b.dayOfWeek)));
       } catch (error) {

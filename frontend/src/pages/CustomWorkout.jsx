@@ -26,7 +26,7 @@ const CustomWorkout = () => {
     const fetchExercises = async () => {
       try {
         const config = { headers: { Authorization: `Bearer ${user.token}` } };
-        const { data } = await axios.get('http://localhost:5005/api/workout/exercises', config);
+        const { data } = await axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:5005'}` + '/api/workout/exercises', config);
         setAllExercises(data);
       } catch (error) {
         console.error('Error fetching exercises:', error);
@@ -87,7 +87,7 @@ const CustomWorkout = () => {
       });
 
       if (payload.length > 0) {
-        await axios.post('http://localhost:5005/api/workout/logs', { logs: payload }, config);
+        await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:5005'}` + '/api/workout/logs', { logs: payload }, config);
         setSuccess(true);
         setTimeout(() => navigate('/'), 2000);
       } else {
