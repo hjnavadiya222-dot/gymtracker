@@ -4,6 +4,7 @@ import { AuthContext } from '../contexts/AuthContext';
 import { Activity } from 'lucide-react';
 
 const Register = () => {
+  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -13,7 +14,7 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    const result = await register(email, password, 'user');
+    const result = await register(username, email, password, 'user');
     if (result.success) {
       navigate('/');
     } else {
@@ -33,6 +34,16 @@ const Register = () => {
         {error && <div className="mb-4" style={{ color: 'var(--danger)', fontSize: '0.875rem', textAlign: 'center' }}>{error}</div>}
         
         <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label className="form-label">Username</label>
+            <input 
+              type="text" 
+              className="form-control" 
+              value={username} 
+              onChange={(e) => setUsername(e.target.value)} 
+              required 
+            />
+          </div>
           <div className="form-group">
             <label className="form-label">Email</label>
             <input 

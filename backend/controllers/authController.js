@@ -9,7 +9,7 @@ const generateToken = (id) => {
 };
 
 const registerUser = async (req, res) => {
-  const { email, password, role } = req.body;
+  const { username, email, password, role } = req.body;
   try {
     const userExists = await User.findOne({ email });
     if (userExists) {
@@ -20,6 +20,7 @@ const registerUser = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, salt);
 
     const user = await User.create({
+      username,
       email,
       password: hashedPassword,
       role: role || 'user'
@@ -28,6 +29,7 @@ const registerUser = async (req, res) => {
     if (user) {
       res.status(201).json({
         _id: user._id,
+        username: user.username,
         email: user.email,
         role: user.role,
         token: generateToken(user._id),
@@ -47,6 +49,7 @@ const authUser = async (req, res) => {
     if (user && (await bcrypt.compare(password, user.password))) {
       res.json({
         _id: user._id,
+        username: user.username,
         email: user.email,
         role: user.role,
         token: generateToken(user._id),

@@ -26,9 +26,9 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const register = async (email, password, role) => {
+  const register = async (username, email, password, role) => {
     try {
-      const { data } = await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:5005'}` + '/api/auth/register', { email, password, role });
+      const { data } = await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:5005'}` + '/api/auth/register', { username, email, password, role });
       setUser(data);
       localStorage.setItem('userInfo', JSON.stringify(data));
       return { success: true };
