@@ -30,24 +30,25 @@ const seedData = [
     { "name": "Leg curl", "bodyPart": "Hamstrings", "sets": 3, "reps": "12" },
     { "name": "Standing calf raise", "bodyPart": "Calves", "sets": 3, "reps": "15" }
   ]},
-  { "day": "Day 4 - Thu", "bodyParts": ["Biceps", "Triceps", "Shoulders"], "exercises": [
-    { "name": "Barbell curl", "bodyPart": "Biceps", "sets": 4, "reps": "10" },
-    { "name": "Incline dumbbell curl", "bodyPart": "Biceps", "sets": 3, "reps": "12" },
-    { "name": "Hammer curl", "bodyPart": "Biceps", "sets": 3, "reps": "12" },
-    { "name": "Tricep pushdown", "bodyPart": "Triceps", "sets": 4, "reps": "10" },
-    { "name": "Skull crushers", "bodyPart": "Triceps", "sets": 3, "reps": "10" },
-    { "name": "Rope extension", "bodyPart": "Triceps", "sets": 3, "reps": "12" },
+  { "day": "Day 4 - Thu", "bodyParts": ["Chest", "Triceps", "Shoulders"], "exercises": [
+    { "name": "Incline dumbbell press", "bodyPart": "Chest", "sets": 4, "reps": "8-10" },
+    { "name": "Bench press", "bodyPart": "Chest", "sets": 4, "reps": "8-10" },
+    { "name": "Pec deck fly", "bodyPart": "Chest", "sets": 3, "reps": "10-12" },
+    { "name": "Cable fly", "bodyPart": "Chest", "sets": 3, "reps": "12" },
+    { "name": "Overhead cable extension", "bodyPart": "Triceps", "sets": 3, "reps": "10-12" },
+    { "name": "Tricep pushdown", "bodyPart": "Triceps", "sets": 3, "reps": "10-12" },
+    { "name": "Reverse-grip pushdown", "bodyPart": "Triceps", "sets": 3, "reps": "10-12" },
     { "name": "Rear delt fly", "bodyPart": "Shoulders", "sets": 3, "reps": "15" },
     { "name": "Dumbbell overhead press", "bodyPart": "Shoulders", "sets": 3, "reps": "10" }
   ]},
-  { "day": "Day 5 - Fri", "bodyParts": ["Shoulders", "Chest", "Back"], "exercises": [
-    { "name": "Lateral raise", "bodyPart": "Shoulders", "sets": 3, "reps": "15" },
-    { "name": "Dumbbell bench press", "bodyPart": "Chest", "sets": 4, "reps": "8-10" },
-    { "name": "Incline dumbbell press", "bodyPart": "Chest", "sets": 3, "reps": "8-10" },
-    { "name": "Cable fly", "bodyPart": "Chest", "sets": 3, "reps": "12" },
+  { "day": "Day 5 - Fri", "bodyParts": ["Back", "Biceps", "Shoulders"], "exercises": [
+    { "name": "Lat pulldown", "bodyPart": "Back", "sets": 4, "reps": "10" },
     { "name": "Seated cable row", "bodyPart": "Back", "sets": 4, "reps": "10" },
-    { "name": "Lat pulldown", "bodyPart": "Back", "sets": 3, "reps": "10" },
-    { "name": "Single-arm dumbbell row", "bodyPart": "Back", "sets": 3, "reps": "10" }
+    { "name": "Chest-supported row", "bodyPart": "Back", "sets": 3, "reps": "10-12" },
+    { "name": "Barbell curl", "bodyPart": "Biceps", "sets": 3, "reps": "10-12" },
+    { "name": "Incline dumbbell curl", "bodyPart": "Biceps", "sets": 3, "reps": "10-12" },
+    { "name": "Hammer curl", "bodyPart": "Biceps", "sets": 3, "reps": "10-12" },
+    { "name": "Lateral raise", "bodyPart": "Shoulders", "sets": 3, "reps": "15" }
   ]},
   { "day": "Day 6 - Sat", "bodyParts": ["Shoulders", "Core", "Abs"], "exercises": [
     { "name": "Barbell overhead press", "bodyPart": "Shoulders", "sets": 3, "reps": "8" },

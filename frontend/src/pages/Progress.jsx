@@ -2,11 +2,13 @@ import { useState, useEffect, useContext, useMemo } from 'react';
 import axios from 'axios';
 import { AuthContext } from '../contexts/AuthContext';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { TrendingUp, Trash2 } from 'lucide-react';
+import { TrendingUp, Trash2, Bot } from 'lucide-react';
 
 const Progress = () => {
   const [logs, setLogs] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [analytics, setAnalytics] = useState(null);
+  const [analyticsLoading, setAnalyticsLoading] = useState(true);
   const [selectedExercise, setSelectedExercise] = useState('');
   const { user } = useContext(AuthContext);
 
@@ -14,11 +16,11 @@ const Progress = () => {
     const fetchProgress = async () => {
       try {
         const config = { headers: { Authorization: `Bearer ${user.token}` } };
-        const { data } = await axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:5005'}` + '/api/workout/progress', config);
+        const { data } = await axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:5005'}/api/workout/progress`, config);
         setLogs(data);
         if (data.length > 0) {
           // Find first exercise ID to default select
-          setSelectedExercise(data[0].exerciseId._id);
+          setSelectedExercise(data[0].exerciseId?._id);
         }
       } catch (error) {
         console.error('Error fetching progress:', error);
@@ -26,7 +28,23 @@ const Progress = () => {
         setLoading(false);
       }
     };
-    if (user) fetchProgress();
+
+    const fetchAnalytics = async () => {
+      try {
+        const config = { headers: { Authorization: `Bearer ${user.token}` } };
+        const { data } = await axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:5005'}/api/workout/analytics`, config);
+        setAnalytics(data);
+      } catch (error) {
+        console.error('Error fetching analytics:', error);
+      } finally {
+        setAnalyticsLoading(false);
+      }
+    };
+
+    if (user) {
+      fetchProgress();
+      fetchAnalytics();
+    }
   }, [user]);
 
   const handleDeleteLog = async (id) => {
@@ -69,7 +87,7 @@ const Progress = () => {
     });
   }, [logs, selectedExercise]);
 
-  if (loading) return <div className="container flex justify-center mt-8">Loading...</div>;
+  if (loading || analyticsLoading) return <div className="container flex justify-center mt-8">Loading...</div>;
 
   return (
     <div className="container animate-fade-in">
@@ -81,6 +99,63 @@ const Progress = () => {
         </div>
       </div>
 
+      {analytics && (
+        <div className="glass-panel p-6 mb-8 border-l-4" style={{ borderColor: 'var(--accent)' }}>
+          <div className="flex items-center gap-2 mb-4">
+            <Bot size={28} color="var(--accent)" />
+            <h2 style={{ margin: 0 }}>AI Analytics & Coaching Engine</h2>
+          </div>
+          
+          <div className="mb-4">
+            <h3 className="text-lg font-bold">Progress Status</h3>
+            <p className="text-xl" style={{ color: 'var(--primary)' }}>{analytics.progress_status}</p>
+          </div>
+          
+          <div className="mb-4">
+            <h3 className="text-lg font-bold mb-2">Coaching Tips</h3>
+            <ul className="list-disc pl-5">
+              {analytics.coaching_tips.map((tip, index) => (
+                <li key={index} className="mb-1">{tip}</li>
+              ))}
+            </ul>
+          </div>
+          
+          {analytics.weekly_summary.length > 0 && (
+            <div className="mt-6">
+              <h3 className="text-lg font-bold mb-2">Weekly e1RM Comparison</h3>
+              <div style={{ overflowX: 'auto' }}>
+                <table className="w-full text-left" style={{ borderCollapse: 'collapse' }}>
+                  <thead>
+                    <tr style={{ borderBottom: '1px solid var(--border)' }}>
+                      <th className="p-2">Exercise</th>
+                      <th className="p-2">Body Part</th>
+                      <th className="p-2">Last Week e1RM</th>
+                      <th className="p-2">This Week e1RM</th>
+                      <th className="p-2">Status</th>
+                      <th className="p-2">Change</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {analytics.weekly_summary.map((item, idx) => (
+                      <tr key={idx} style={{ borderBottom: '1px solid var(--glass-border)' }}>
+                        <td className="p-2">{item.exerciseName}</td>
+                        <td className="p-2">{item.bodyPart}</td>
+                        <td className="p-2">{item.lastWeekE1RM} lbs</td>
+                        <td className="p-2">{item.currentWeekE1RM} lbs</td>
+                        <td className="p-2 font-bold" style={{
+                          color: item.status === 'Increased' ? '#4ade80' : item.status === 'Decreased' ? '#f87171' : 'var(--text-muted)'
+                        }}>{item.status}</td>
+                        <td className="p-2">{item.percentageChange}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
       {logs.length === 0 ? (
         <div className="glass-panel text-center py-8">
           <p>No workout logs found. Start working out to see your progress!</p>
@@ -89,7 +164,7 @@ const Progress = () => {
         <div className="grid grid-cols-3 gap-8">
           <div className="glass-panel p-6 col-span-full md-col-span-1">
             <h3 className="mb-4">Select Exercise</h3>
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-2" style={{ maxHeight: '400px', overflowY: 'auto' }}>
               {exercises.map(ex => (
                 <button
                   key={ex._id}
@@ -104,7 +179,7 @@ const Progress = () => {
           </div>
           
           <div className="glass-panel p-6 col-span-full md-col-span-2">
-            <h3 className="mb-4">Max Weight Trend</h3>
+            <h3 className="mb-4">Max Weight Trend (Overall Progression)</h3>
             <div style={{ width: '100%', height: '400px' }}>
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={chartData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
