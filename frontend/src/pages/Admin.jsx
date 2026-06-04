@@ -42,6 +42,19 @@ const Admin = () => {
     }
   };
 
+  const handleSeedDatabase = async () => {
+    if (window.confirm('Are you sure you want to re-seed the entire database? This will clear all existing exercises and routines!')) {
+      try {
+        const config = { headers: { Authorization: `Bearer ${user.token}` } };
+        await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:5005'}/api/admin/seed`, {}, config);
+        alert('Database seeded successfully! Please refresh your dashboard.');
+      } catch (error) {
+        console.error('Error seeding database:', error);
+        alert('Failed to seed database.');
+      }
+    }
+  };
+
   if (!user || user.role !== 'admin') {
     return <div className="container mt-8 text-center text-danger">Access Denied. Admins only.</div>;
   }
@@ -50,12 +63,17 @@ const Admin = () => {
 
   return (
     <div className="container animate-fade-in">
-      <div className="flex items-center gap-4 mb-8">
-        <ShieldAlert size={32} color="var(--danger)" />
-        <div>
-          <h1 style={{ margin: 0 }}>Admin Panel</h1>
-          <p>Manage users and system logs</p>
+      <div className="flex justify-between items-center mb-8">
+        <div className="flex items-center gap-4">
+          <ShieldAlert size={32} color="var(--danger)" />
+          <div>
+            <h1 style={{ margin: 0 }}>Admin Panel</h1>
+            <p>Manage users and system logs</p>
+          </div>
         </div>
+        <button className="btn" style={{ backgroundColor: 'var(--accent)', color: 'black' }} onClick={handleSeedDatabase}>
+          Seed Cloud Database
+        </button>
       </div>
 
       <div className="grid gap-8">
