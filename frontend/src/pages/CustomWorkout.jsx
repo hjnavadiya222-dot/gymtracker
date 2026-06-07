@@ -155,6 +155,17 @@ const CustomWorkout = () => {
     }
   };
 
+  const handleClear = () => {
+    if (window.confirm("Are you sure you want to clear all entered data for this custom workout?")) {
+      setSessionBlocks([]);
+      setLogs({});
+      setCardio({ distance: '', calories: '', duration: '' });
+      localStorage.removeItem("draft_custom_session");
+      localStorage.removeItem("draft_custom_logs");
+      localStorage.removeItem("draft_custom_cardio");
+    }
+  };
+
   if (loading) return <div className="container mt-8 text-center">Loading Exercises...</div>;
 
   return (
@@ -316,7 +327,15 @@ const CustomWorkout = () => {
                 </div>
               </div>
 
-              <div className="mt-4 flex justify-end">
+              <div className="mt-4 flex justify-end gap-4">
+                <button 
+                  className="btn btn-outline" 
+                  onClick={handleClear} 
+                  disabled={saving}
+                  style={{ padding: '1rem 2rem', fontSize: '1.1rem' }}
+                >
+                  Clear Data
+                </button>
                 <button 
                   className="btn btn-primary" 
                   onClick={handleSave} 

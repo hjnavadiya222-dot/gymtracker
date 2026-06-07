@@ -109,6 +109,15 @@ const WorkoutTracking = () => {
     }
   };
 
+  const handleClear = () => {
+    if (window.confirm("Are you sure you want to clear all entered data for this workout?")) {
+      setLogs({});
+      setCardio({ distance: '', calories: '', duration: '' });
+      localStorage.removeItem("draft_workout_" + routine._id);
+      localStorage.removeItem("draft_cardio_" + routine._id);
+    }
+  };
+
   return (
     <div className="container animate-fade-in">
       <button className="btn btn-outline mb-6" onClick={() => navigate('/')} style={{ padding: '0.5rem 1rem' }}>
@@ -218,7 +227,15 @@ const WorkoutTracking = () => {
             </div>
           </div>
 
-          <div className="mt-4 flex justify-end">
+          <div className="mt-4 flex justify-end gap-4">
+            <button 
+              className="btn btn-outline" 
+              onClick={handleClear} 
+              disabled={saving}
+              style={{ padding: '1rem 2rem', fontSize: '1.1rem' }}
+            >
+              Clear Data
+            </button>
             <button 
               className="btn btn-primary" 
               onClick={handleSave} 
