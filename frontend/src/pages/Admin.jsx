@@ -3,6 +3,14 @@ import axios from 'axios';
 import { AuthContext } from '../contexts/AuthContext';
 import { ShieldAlert, Trash2 } from 'lucide-react';
 
+const formatDate = (dateString) => {
+  const d = new Date(dateString);
+  const dd = String(d.getDate()).padStart(2, '0');
+  const mm = String(d.getMonth() + 1).padStart(2, '0');
+  const yyyy = d.getFullYear();
+  return `${dd}/${mm}/${yyyy}`;
+};
+
 const Admin = () => {
   const [users, setUsers] = useState([]);
   const [logs, setLogs] = useState([]);
@@ -34,7 +42,7 @@ const Admin = () => {
     if (window.confirm('Are you sure you want to delete this user?')) {
       try {
         const config = { headers: { Authorization: `Bearer ${user.token}` } };
-        await axios.delete(`http://localhost:5005/api/admin/users/${id}`, config);
+        await axios.delete(`${import.meta.env.VITE_API_URL || 'http://localhost:5005'}/api/admin/users/${id}`, config);
         setUsers(users.filter(u => u._id !== id));
       } catch (error) {
         console.error('Error deleting user:', error);
@@ -100,7 +108,7 @@ const Admin = () => {
                         {u.role}
                       </span>
                     </td>
-                    <td className="p-3">{new Date(u.createdAt).toLocaleDateString()}</td>
+                    <td className="p-3">{formatDate(u.createdAt)}</td>
                     <td className="p-3 text-right">
                       {u.role !== 'admin' && (
                         <button className="btn btn-danger" style={{ padding: '0.5rem' }} onClick={() => handleDeleteUser(u._id)}>
@@ -133,7 +141,7 @@ const Admin = () => {
                     <td className="p-3">{log.userId?.email || 'Unknown User'}</td>
                     <td className="p-3">{log.exerciseId?.name || 'Unknown Exercise'}</td>
                     <td className="p-3">{log.sets.length}</td>
-                    <td className="p-3">{new Date(log.date).toLocaleString()}</td>
+                    <td className="p-3">{formatDate(log.date)} {new Date(log.date).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</td>
                   </tr>
                 ))}
               </tbody>

@@ -2,13 +2,22 @@ import { useState, useEffect, useContext, useMemo } from 'react';
 import axios from 'axios';
 import { AuthContext } from '../contexts/AuthContext';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { TrendingUp, Trash2, Bot } from 'lucide-react';
+import { TrendingUp, Trash2, Bot, Activity } from 'lucide-react';
+
+const formatDate = (dateString) => {
+  const d = new Date(dateString);
+  const dd = String(d.getDate()).padStart(2, '0');
+  const mm = String(d.getMonth() + 1).padStart(2, '0');
+  const yyyy = d.getFullYear();
+  return `${dd}/${mm}/${yyyy}`;
+};
 
 const Progress = () => {
   const [logs, setLogs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [analytics, setAnalytics] = useState(null);
   const [analyticsLoading, setAnalyticsLoading] = useState(true);
+  const [cardioLogs, setCardioLogs] = useState([]);
   const [selectedExercise, setSelectedExercise] = useState('');
   const { user } = useContext(AuthContext);
 
@@ -41,9 +50,20 @@ const Progress = () => {
       }
     };
 
+    const fetchCardio = async () => {
+      try {
+        const config = { headers: { Authorization: `Bearer ${user.token}` } };
+        const { data } = await axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:5005'}/api/workout/cardio`, config);
+        setCardioLogs(data);
+      } catch (error) {
+        console.error('Error fetching cardio:', error);
+      }
+    };
+
     if (user) {
       fetchProgress();
       fetchAnalytics();
+      fetchCardio();
     }
   }, [user]);
 
@@ -81,7 +101,7 @@ const Progress = () => {
       // Find max weight in the sets for that day
       const maxWeight = Math.max(...log.sets.map(set => set.weight || 0));
       return {
-        date: new Date(log.date).toLocaleDateString(),
+        date: formatDate(log.date),
         maxWeight: maxWeight,
       };
     });
@@ -213,7 +233,7 @@ const Progress = () => {
                 <tbody>
                   {logs.map(log => (
                     <tr key={log._id} style={{ borderBottom: '1px solid var(--glass-border)' }}>
-                      <td className="p-3">{new Date(log.date).toLocaleString()}</td>
+                      <td className="p-3">{formatDate(log.date)} {new Date(log.date).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</td>
                       <td className="p-3">{log.exerciseId?.name || 'Unknown Exercise'}</td>
                       <td className="p-3">{log.sets.length}</td>
                       <td className="p-3 text-right">
@@ -227,6 +247,38 @@ const Progress = () => {
               </table>
             </div>
           </div>
+
+          {/* Cardio History Table */}
+          {cardioLogs.length > 0 && (
+            <div className="glass-panel p-6 mt-8 col-span-full md-col-span-3">
+              <div className="flex items-center gap-2 mb-4">
+                <Activity size={24} color="var(--accent)" />
+                <h3 style={{ margin: 0 }}>Recent Cardio History</h3>
+              </div>
+              <div style={{ overflowX: 'auto', maxHeight: '400px' }}>
+                <table className="w-full text-left" style={{ borderCollapse: 'collapse' }}>
+                  <thead>
+                    <tr style={{ borderBottom: '1px solid var(--border)' }}>
+                      <th className="p-3">Date</th>
+                      <th className="p-3">Distance (km)</th>
+                      <th className="p-3">Calories</th>
+                      <th className="p-3">Time (min)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {cardioLogs.map(log => (
+                      <tr key={log._id} style={{ borderBottom: '1px solid var(--glass-border)' }}>
+                        <td className="p-3">{formatDate(log.date)} {new Date(log.date).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</td>
+                        <td className="p-3">{log.distance}</td>
+                        <td className="p-3">{log.calories}</td>
+                        <td className="p-3">{log.duration}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
 
         </div>
       )}

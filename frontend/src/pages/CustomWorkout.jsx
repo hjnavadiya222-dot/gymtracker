@@ -2,7 +2,7 @@ import { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { AuthContext } from '../contexts/AuthContext';
-import { Save, ArrowLeft, CheckCircle, Plus } from 'lucide-react';
+import { Save, ArrowLeft, CheckCircle, Plus, Activity } from 'lucide-react';
 
 const CustomWorkout = () => {
   const navigate = useNavigate();
@@ -17,8 +17,47 @@ const CustomWorkout = () => {
   const [numSets, setNumSets] = useState(3);
 
   // Active workout session blocks
-  const [sessionBlocks, setSessionBlocks] = useState([]);
-  const [logs, setLogs] = useState({});
+  const [sessionBlocks, setSessionBlocks] = useState(() => {
+    const saved = localStorage.getItem("draft_custom_session");
+    if (saved) {
+      try { return JSON.parse(saved); } catch (e) {}
+    }
+    return [];
+  });
+
+  const [logs, setLogs] = useState(() => {
+    const saved = localStorage.getItem("draft_custom_logs");
+    if (saved) {
+      try { return JSON.parse(saved); } catch (e) {}
+    }
+    return {};
+  });
+
+  const [cardio, setCardio] = useState(() => {
+    const saved = localStorage.getItem("draft_custom_cardio");
+    if (saved) {
+      try { return JSON.parse(saved); } catch (e) {}
+    }
+    return { distance: '', calories: '', duration: '' };
+  });
+
+  useEffect(() => {
+    if (sessionBlocks.length > 0) {
+      localStorage.setItem("draft_custom_session", JSON.stringify(sessionBlocks));
+    }
+  }, [sessionBlocks]);
+
+  useEffect(() => {
+    if (Object.keys(logs).length > 0) {
+      localStorage.setItem("draft_custom_logs", JSON.stringify(logs));
+    }
+  }, [logs]);
+
+  useEffect(() => {
+    if (cardio.distance || cardio.calories || cardio.duration) {
+      localStorage.setItem("draft_custom_cardio", JSON.stringify(cardio));
+    }
+  }, [cardio]);
   const [saving, setSaving] = useState(false);
   const [success, setSuccess] = useState(false);
 
@@ -86,12 +125,28 @@ const CustomWorkout = () => {
         }
       });
 
+      let savedAnything = false;
+
       if (payload.length > 0) {
         await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:5005'}` + '/api/workout/logs', { logs: payload }, config);
+        savedAnything = true;
+      }
+
+      if (cardio.distance && cardio.calories && cardio.duration) {
+        await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:5005'}` + '/api/workout/cardio', cardio, config);
+        savedAnything = true;
+      }
+
+      if (savedAnything) {
+        // Clear drafts on success
+        localStorage.removeItem("draft_custom_session");
+        localStorage.removeItem("draft_custom_logs");
+        localStorage.removeItem("draft_custom_cardio");
+        
         setSuccess(true);
         setTimeout(() => navigate('/'), 2000);
       } else {
-        alert("Please enter some reps and weight before saving.");
+        alert("Please enter some reps and weight, or complete the cardio section before saving.");
       }
     } catch (error) {
       console.error('Error saving logs:', error);
@@ -221,6 +276,45 @@ const CustomWorkout = () => {
                   </div>
                 </div>
               ))}
+
+              <div className="card glass-panel mt-4 mb-2 border-l-4" style={{ borderColor: 'var(--accent)' }}>
+                <div className="flex items-center gap-2 mb-4">
+                  <Activity size={24} color="var(--accent)" />
+                  <h3 className="text-xl m-0">Daily Cardio (Treadmill)</h3>
+                </div>
+                <div className="grid gap-4" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))' }}>
+                  <div>
+                    <label className="form-label" style={{ color: 'var(--text-muted)' }}>Distance (km)</label>
+                    <input 
+                      type="number" 
+                      className="form-control" 
+                      value={cardio.distance} 
+                      onChange={e => setCardio({...cardio, distance: e.target.value})} 
+                      placeholder="e.g. 5.2" 
+                    />
+                  </div>
+                  <div>
+                    <label className="form-label" style={{ color: 'var(--text-muted)' }}>Calories Burned</label>
+                    <input 
+                      type="number" 
+                      className="form-control" 
+                      value={cardio.calories} 
+                      onChange={e => setCardio({...cardio, calories: e.target.value})} 
+                      placeholder="e.g. 300" 
+                    />
+                  </div>
+                  <div>
+                    <label className="form-label" style={{ color: 'var(--text-muted)' }}>Time (minutes)</label>
+                    <input 
+                      type="number" 
+                      className="form-control" 
+                      value={cardio.duration} 
+                      onChange={e => setCardio({...cardio, duration: e.target.value})} 
+                      placeholder="e.g. 30" 
+                    />
+                  </div>
+                </div>
+              </div>
 
               <div className="mt-4 flex justify-end">
                 <button 

@@ -1,5 +1,6 @@
 const Routine = require('../models/Routine');
 const WorkoutLog = require('../models/WorkoutLog');
+const CardioLog = require('../models/CardioLog');
 
 // Get all routines
 const getRoutines = async (req, res) => {
@@ -70,4 +71,30 @@ const deleteWorkoutLog = async (req, res) => {
   }
 };
 
-module.exports = { getRoutines, saveWorkoutLog, getProgress, getExercises, deleteWorkoutLog };
+// Log cardio session
+const saveCardioLog = async (req, res) => {
+  const { distance, calories, duration } = req.body;
+  try {
+    const newCardio = await CardioLog.create({
+      userId: req.user._id,
+      distance: Number(distance),
+      calories: Number(calories),
+      duration: Number(duration)
+    });
+    res.status(201).json(newCardio);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Get cardio progress
+const getCardioLogs = async (req, res) => {
+  try {
+    const logs = await CardioLog.find({ userId: req.user._id }).sort({ date: 1 });
+    res.json(logs);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+module.exports = { getRoutines, saveWorkoutLog, getProgress, getExercises, deleteWorkoutLog, saveCardioLog, getCardioLogs };
