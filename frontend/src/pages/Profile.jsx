@@ -38,7 +38,8 @@ const Profile = () => {
       setProfileMessage('Profile updated successfully!');
       setTimeout(() => setProfileMessage(''), 3000);
     } catch (error) {
-      setProfileMessage('Error updating profile');
+      console.error('Profile update error:', error.response?.data || error.message);
+      setProfileMessage(error.response?.data?.message || 'Error updating profile');
     } finally {
       setProfileLoading(false);
     }
