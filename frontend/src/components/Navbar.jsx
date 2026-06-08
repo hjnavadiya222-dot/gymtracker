@@ -24,11 +24,28 @@ const Navbar = () => {
           <>
             <Link to="/" className="nav-link">Dashboard</Link>
             <Link to="/progress" className="nav-link">Progress</Link>
-            <Link to="/profile" className="nav-link">Profile</Link>
             {user.role === 'admin' && (
               <Link to="/admin" className="nav-link">Admin Panel</Link>
             )}
-            <button onClick={handleLogout} className="btn btn-outline" style={{ padding: '0.5rem 1rem' }}>
+            <Link 
+              to="/profile" 
+              className="flex items-center justify-center" 
+              style={{ 
+                width: '36px', 
+                height: '36px', 
+                borderRadius: '50%', 
+                backgroundColor: 'var(--accent)', 
+                color: '#000', 
+                fontWeight: 'bold', 
+                fontSize: '1.2rem',
+                textDecoration: 'none',
+                marginLeft: '1rem'
+              }}
+              title="Your Profile"
+            >
+              {user.username ? user.username.charAt(0).toUpperCase() : 'U'}
+            </Link>
+            <button onClick={handleLogout} className="btn btn-outline" style={{ padding: '0.5rem 1rem', marginLeft: '1rem' }}>
               <LogOut size={18} />
               Logout
             </button>
