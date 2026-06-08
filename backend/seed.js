@@ -68,10 +68,9 @@ async function seedDB() {
     await mongoose.connect(MONGO_URI);
     console.log('Connected to MongoDB');
 
-    // Clear existing data
-    await Exercise.deleteMany({});
+    // Clear existing routines
     await Routine.deleteMany({});
-    console.log('Cleared existing Exercises and Routines');
+    console.log('Cleared existing Routines');
 
     for (const dayPlan of seedData) {
       const exerciseIds = [];

@@ -106,7 +106,6 @@ const seedDatabase = async (req, res) => {
       ]}
     ];
 
-    await Exercise.deleteMany({});
     await Routine.deleteMany({});
 
     for (const dayPlan of seedData) {
