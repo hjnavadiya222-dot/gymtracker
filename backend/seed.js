@@ -9,24 +9,26 @@ const seedData = [
   { "day": "Day 1 - Mon", "bodyParts": ["Chest", "Triceps", "Shoulders"], "exercises": [
     { "name": "Bench press", "bodyPart": "Chest", "sets": 4, "reps": "6-8" },
     { "name": "Incline dumbbell press", "bodyPart": "Chest", "sets": 3, "reps": "8-10" },
+    { "name": "Decline chest press", "bodyPart": "Chest", "sets": 3, "reps": "8-10" },
     { "name": "Cable fly", "bodyPart": "Chest", "sets": 3, "reps": "12" },
     { "name": "Tricep pushdown", "bodyPart": "Triceps", "sets": 3, "reps": "10" },
-    { "name": "Overhead dumbbell ext.", "bodyPart": "Triceps", "sets": 3, "reps": "12" },
-    { "name": "Dumbbell lateral raise", "bodyPart": "Shoulders", "sets": 4, "reps": "15" },
+    { "name": "Overhead cable extension", "bodyPart": "Triceps", "sets": 3, "reps": "12" },
+    { "name": "Dumbbell lateral raise", "bodyPart": "Shoulders", "sets": 3, "reps": "15" },
     { "name": "Face pulls", "bodyPart": "Shoulders", "sets": 3, "reps": "15" }
   ]},
-  { "day": "Day 2 - Tue", "bodyParts": ["Back", "Biceps"], "exercises": [
+  { "day": "Day 2 - Tue", "bodyParts": ["Back", "Biceps", "Traps"], "exercises": [
     { "name": "Pull-ups", "bodyPart": "Back", "sets": 4, "reps": "6-8" },
     { "name": "Barbell row", "bodyPart": "Back", "sets": 3, "reps": "8-10" },
     { "name": "Lat pulldown", "bodyPart": "Back", "sets": 3, "reps": "10" },
     { "name": "Barbell curl", "bodyPart": "Biceps", "sets": 3, "reps": "10" },
-    { "name": "Hammer curl", "bodyPart": "Biceps", "sets": 3, "reps": "12" }
+    { "name": "Hammer curl", "bodyPart": "Biceps", "sets": 3, "reps": "12" },
+    { "name": "Dumbbell shrugs", "bodyPart": "Traps", "sets": 3, "reps": "12" }
   ]},
   { "day": "Day 3 - Wed", "bodyParts": ["Quads", "Hamstrings", "Calves"], "exercises": [
-    { "name": "Barbell squat", "bodyPart": "Quads", "sets": 4, "reps": "6-8" },
+    { "name": "Hack Squat", "bodyPart": "Quads", "sets": 3, "reps": "6-8" },
     { "name": "Leg press", "bodyPart": "Quads", "sets": 4, "reps": "10" },
-    { "name": "Dumbbell lunges", "bodyPart": "Quads", "sets": 3, "reps": "10" },
     { "name": "Leg extension", "bodyPart": "Quads", "sets": 3, "reps": "12" },
+    { "name": "Romanian Deadlifts", "bodyPart": "Hamstrings", "sets": 3, "reps": "10" },
     { "name": "Leg curl", "bodyPart": "Hamstrings", "sets": 3, "reps": "12" },
     { "name": "Standing calf raise", "bodyPart": "Calves", "sets": 3, "reps": "15" }
   ]},
@@ -43,7 +45,7 @@ const seedData = [
   ]},
   { "day": "Day 5 - Fri", "bodyParts": ["Back", "Biceps", "Shoulders"], "exercises": [
     { "name": "Lat pulldown", "bodyPart": "Back", "sets": 4, "reps": "10" },
-    { "name": "Seated cable row", "bodyPart": "Back", "sets": 4, "reps": "10" },
+    { "name": "Seated cable row", "bodyPart": "Back", "sets": 3, "reps": "10" },
     { "name": "Chest-supported row", "bodyPart": "Back", "sets": 3, "reps": "10-12" },
     { "name": "Barbell curl", "bodyPart": "Biceps", "sets": 3, "reps": "10-12" },
     { "name": "Incline dumbbell curl", "bodyPart": "Biceps", "sets": 3, "reps": "10-12" },

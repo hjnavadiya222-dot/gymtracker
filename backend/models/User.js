@@ -23,6 +23,10 @@ const userSchema = new mongoose.Schema({
     enum: ['user', 'admin'],
     default: 'user',
   },
+  name: { type: String },
+  age: { type: Number },
+  height: { type: Number }, // in cm
+  weight: { type: Number }, // in kg
 }, { timestamps: true });
 
 module.exports = mongoose.model('User', userSchema);

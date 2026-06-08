@@ -113,6 +113,14 @@ const getAnalytics = async (req, res) => {
       }
     }
 
+    if (req.user.weight && req.user.height) {
+      const heightM = req.user.height / 100;
+      const bmi = (req.user.weight / (heightM * heightM)).toFixed(1);
+      coaching_tips.push(`Personalized Insight: Your BMI is approx ${bmi}. Ensure your training volume matches your goals (cutting/bulking).`);
+    } else if (!req.user.weight || !req.user.height) {
+      coaching_tips.push(`Tip: Update your profile with your height and weight on the Dashboard for more personalized analytics.`);
+    }
+
     res.json({
       weekly_summary,
       progress_status,

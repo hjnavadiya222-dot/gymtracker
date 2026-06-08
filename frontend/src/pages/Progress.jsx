@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext, useMemo } from 'react';
 import axios from 'axios';
 import { AuthContext } from '../contexts/AuthContext';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { TrendingUp, Trash2, Bot, Activity } from 'lucide-react';
 
 const formatDate = (dateString) => {
@@ -217,6 +217,29 @@ const Progress = () => {
             </div>
           </div>
 
+          {/* Previous vs Current Strength Chart */}
+          {analytics && analytics.weekly_summary && analytics.weekly_summary.length > 0 && (
+            <div className="glass-panel p-6 mt-8 col-span-full md-col-span-3">
+              <h3 className="mb-4">Previous vs Current Strength (e1RM)</h3>
+              <div style={{ width: '100%', height: '400px' }}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={analytics.weekly_summary} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
+                    <XAxis dataKey="exerciseName" stroke="var(--text-muted)" />
+                    <YAxis stroke="var(--text-muted)" />
+                    <Tooltip 
+                      contentStyle={{ backgroundColor: 'var(--bg-panel)', borderColor: 'var(--border)', borderRadius: '8px' }}
+                      itemStyle={{ color: 'var(--text-main)' }}
+                    />
+                    <Legend />
+                    <Bar dataKey="lastWeekE1RM" name="Previous Week e1RM" fill="var(--text-muted)" radius={[4, 4, 0, 0]} />
+                    <Bar dataKey="currentWeekE1RM" name="Current Week e1RM" fill="var(--primary)" radius={[4, 4, 0, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+          )}
+
           {/* Workout History Table */}
           <div className="glass-panel p-6 mt-8 col-span-full md-col-span-3">
             <h3 className="mb-4">Recent Workout History</h3>
@@ -231,7 +254,7 @@ const Progress = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {logs.map(log => (
+                  {[...logs].sort((a,b) => new Date(b.date) - new Date(a.date)).map(log => (
                     <tr key={log._id} style={{ borderBottom: '1px solid var(--glass-border)' }}>
                       <td className="p-3">{formatDate(log.date)} {new Date(log.date).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</td>
                       <td className="p-3">{log.exerciseId?.name || 'Unknown Exercise'}</td>
@@ -266,7 +289,7 @@ const Progress = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {cardioLogs.map(log => (
+                    {[...cardioLogs].sort((a,b) => new Date(b.date) - new Date(a.date)).map(log => (
                       <tr key={log._id} style={{ borderBottom: '1px solid var(--glass-border)' }}>
                         <td className="p-3">{formatDate(log.date)} {new Date(log.date).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</td>
                         <td className="p-3">{log.distance}</td>
