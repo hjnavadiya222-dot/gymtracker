@@ -9,7 +9,7 @@ const seedData = [
   { "day": "Day 1 - Mon", "bodyParts": ["Chest", "Triceps", "Shoulders"], "exercises": [
     { "name": "Bench press", "bodyPart": "Chest", "sets": 4, "reps": "6-8" },
     { "name": "Incline dumbbell press", "bodyPart": "Chest", "sets": 3, "reps": "8-10" },
-    { "name": "Decline chest press", "bodyPart": "Chest", "sets": 3, "reps": "8-10" },
+    { "name": "Decline bench press", "bodyPart": "Chest", "sets": 3, "reps": "8-10" },
     { "name": "Cable fly", "bodyPart": "Chest", "sets": 3, "reps": "12" },
     { "name": "Tricep pushdown", "bodyPart": "Triceps", "sets": 3, "reps": "10" },
     { "name": "Overhead cable extension", "bodyPart": "Triceps", "sets": 3, "reps": "12" },
