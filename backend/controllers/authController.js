@@ -71,6 +71,11 @@ const updateProfile = async (req, res) => {
       user.height = req.body.height === '' ? undefined : (req.body.height !== undefined ? Number(req.body.height) : user.height);
       user.weight = req.body.weight === '' ? undefined : (req.body.weight !== undefined ? Number(req.body.weight) : user.weight);
       
+      // Handle legacy users who might not have a username
+      if (!user.username) {
+        user.username = `user_${Date.now()}`;
+      }
+
       const updatedUser = await user.save();
       res.json({
         _id: updatedUser._id,
