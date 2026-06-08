@@ -43,7 +43,7 @@ const Navbar = () => {
               }}
               title="Your Profile"
             >
-              {user.username ? user.username.charAt(0).toUpperCase() : 'U'}
+              {user.name ? user.name.charAt(0).toUpperCase() : (user.username ? user.username.charAt(0).toUpperCase() : 'U')}
             </Link>
             <button onClick={handleLogout} className="btn btn-outline" style={{ padding: '0.5rem 1rem', marginLeft: '1rem' }}>
               <LogOut size={18} />
