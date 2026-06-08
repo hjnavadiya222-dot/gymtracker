@@ -66,10 +66,10 @@ const updateProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
     if (user) {
-      user.name = req.body.name || user.name;
-      user.age = req.body.age || user.age;
-      user.height = req.body.height || user.height;
-      user.weight = req.body.weight || user.weight;
+      user.name = req.body.name !== undefined ? req.body.name : user.name;
+      user.age = req.body.age === '' ? undefined : (req.body.age !== undefined ? Number(req.body.age) : user.age);
+      user.height = req.body.height === '' ? undefined : (req.body.height !== undefined ? Number(req.body.height) : user.height);
+      user.weight = req.body.weight === '' ? undefined : (req.body.weight !== undefined ? Number(req.body.weight) : user.weight);
       
       const updatedUser = await user.save();
       res.json({

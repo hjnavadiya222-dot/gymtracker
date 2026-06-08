@@ -10,6 +10,7 @@ import Dashboard from './pages/Dashboard';
 import WorkoutTracking from './pages/WorkoutTracking';
 import CustomWorkout from './pages/CustomWorkout';
 import Progress from './pages/Progress';
+import Profile from './pages/Profile';
 import Admin from './pages/Admin';
 
 const ProtectedRoute = ({ children, requireAdmin = false }) => {
@@ -57,6 +58,12 @@ function App() {
         <Route path="/progress" element={
           <ProtectedRoute>
             <Progress />
+          </ProtectedRoute>
+        } />
+
+        <Route path="/profile" element={
+          <ProtectedRoute>
+            <Profile />
           </ProtectedRoute>
         } />
         
