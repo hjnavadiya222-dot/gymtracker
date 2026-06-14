@@ -88,6 +88,10 @@ async function seedDB() {
             defaultSets: exData.sets,
             defaultReps: exData.reps
           });
+        } else {
+          exercise.defaultSets = exData.sets;
+          exercise.defaultReps = exData.reps;
+          await exercise.save();
         }
         exerciseIds.push(exercise._id);
       }
