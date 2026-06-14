@@ -30,11 +30,12 @@ const seedData = [
     { "name": "Leg extension", "bodyPart": "Quads", "sets": 3, "reps": "12" },
     { "name": "Romanian Deadlifts", "bodyPart": "Hamstrings", "sets": 3, "reps": "10" },
     { "name": "Leg curl", "bodyPart": "Hamstrings", "sets": 3, "reps": "12" },
-    { "name": "Standing calf raise", "bodyPart": "Calves", "sets": 3, "reps": "15" }
+    { "name": "Seated calf raise", "bodyPart": "Calves", "sets": 3, "reps": "15" }
   ]},
   { "day": "Day 4 - Thu", "bodyParts": ["Chest", "Triceps", "Shoulders"], "exercises": [
     { "name": "Incline dumbbell press", "bodyPart": "Chest", "sets": 4, "reps": "8-10" },
     { "name": "Bench press", "bodyPart": "Chest", "sets": 4, "reps": "8-10" },
+    { "name": "Decline bench press", "bodyPart": "Chest", "sets": 3, "reps": "8-10" },
     { "name": "Pec deck fly", "bodyPart": "Chest", "sets": 3, "reps": "10-12" },
     { "name": "Cable fly", "bodyPart": "Chest", "sets": 3, "reps": "12" },
     { "name": "Overhead cable extension", "bodyPart": "Triceps", "sets": 3, "reps": "10-12" },
@@ -50,7 +51,8 @@ const seedData = [
     { "name": "Barbell curl", "bodyPart": "Biceps", "sets": 3, "reps": "10-12" },
     { "name": "Incline dumbbell curl", "bodyPart": "Biceps", "sets": 3, "reps": "10-12" },
     { "name": "Hammer curl", "bodyPart": "Biceps", "sets": 3, "reps": "10-12" },
-    { "name": "Lateral raise", "bodyPart": "Shoulders", "sets": 3, "reps": "15" }
+    { "name": "Lateral raise", "bodyPart": "Shoulders", "sets": 3, "reps": "15" },
+    { "name": "Dumbbell shrugs", "bodyPart": "Traps", "sets": 3, "reps": "12" }
   ]},
   { "day": "Day 6 - Sat", "bodyParts": ["Shoulders", "Core", "Abs"], "exercises": [
     { "name": "Barbell overhead press", "bodyPart": "Shoulders", "sets": 3, "reps": "8" },

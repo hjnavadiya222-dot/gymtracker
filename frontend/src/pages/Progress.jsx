@@ -2,7 +2,7 @@ import { useState, useEffect, useContext, useMemo } from 'react';
 import axios from 'axios';
 import { AuthContext } from '../contexts/AuthContext';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { TrendingUp, Trash2, Bot, Activity } from 'lucide-react';
+import { TrendingUp, Trash2, Bot, Activity, Edit, Check, X, Plus } from 'lucide-react';
 
 const formatDate = (dateString) => {
   const d = new Date(dateString);
@@ -18,7 +18,8 @@ const Progress = () => {
   const [analytics, setAnalytics] = useState(null);
   const [analyticsLoading, setAnalyticsLoading] = useState(true);
   const [cardioLogs, setCardioLogs] = useState([]);
-  const [selectedExercise, setSelectedExercise] = useState('');
+  const [editingLogId, setEditingLogId] = useState(null);
+  const [editSets, setEditSets] = useState([]);
   const { user } = useContext(AuthContext);
 
   useEffect(() => {
@@ -27,10 +28,6 @@ const Progress = () => {
         const config = { headers: { Authorization: `Bearer ${user.token}` } };
         const { data } = await axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:5005'}/api/workout/progress`, config);
         setLogs(data);
-        if (data.length > 0) {
-          // Find first exercise ID to default select
-          setSelectedExercise(data[0].exerciseId?._id);
-        }
       } catch (error) {
         console.error('Error fetching progress:', error);
       } finally {
@@ -79,6 +76,45 @@ const Progress = () => {
     }
   };
 
+  const handleEditClick = (log) => {
+    setEditingLogId(log._id);
+    setEditSets(JSON.parse(JSON.stringify(log.sets)));
+  };
+
+  const handleCancelEdit = () => {
+    setEditingLogId(null);
+    setEditSets([]);
+  };
+
+  const handleSaveEdit = async (id) => {
+    try {
+      const config = { headers: { Authorization: `Bearer ${user.token}` } };
+      await axios.put(`${import.meta.env.VITE_API_URL || 'http://localhost:5005'}/api/workout/logs/${id}`, { sets: editSets }, config);
+      setLogs(logs.map(log => log._id === id ? { ...log, sets: editSets } : log));
+      setEditingLogId(null);
+      setEditSets([]);
+    } catch (error) {
+      console.error('Error updating log:', error);
+      alert('Failed to update log');
+    }
+  };
+
+  const handleSetChange = (index, field, value) => {
+    const newSets = [...editSets];
+    newSets[index][field] = value;
+    setEditSets(newSets);
+  };
+
+  const handleAddSet = () => {
+    setEditSets([...editSets, { reps: '', weight: 0 }]);
+  };
+
+  const handleRemoveSet = (index) => {
+    const newSets = [...editSets];
+    newSets.splice(index, 1);
+    setEditSets(newSets);
+  };
+
   // Extract unique exercises from logs
   const exercises = useMemo(() => {
     const unique = [];
@@ -92,20 +128,26 @@ const Progress = () => {
     return unique;
   }, [logs]);
 
-  // Format data for Recharts
+  // Format data for Recharts to show all exercises
   const chartData = useMemo(() => {
-    if (!selectedExercise) return [];
+    const dataByDate = {};
     
-    const filteredLogs = logs.filter(log => log.exerciseId?._id === selectedExercise);
-    return filteredLogs.map(log => {
-      // Find max weight in the sets for that day
+    logs.forEach(log => {
+      const dateStr = formatDate(log.date);
+      if (!dataByDate[dateStr]) {
+        dataByDate[dateStr] = { date: dateStr, rawDate: log.date };
+      }
       const maxWeight = Math.max(...log.sets.map(set => set.weight || 0));
-      return {
-        date: formatDate(log.date),
-        maxWeight: maxWeight,
-      };
+      const exName = log.exerciseId?.name || 'Unknown';
+      if (!dataByDate[dateStr][exName] || dataByDate[dateStr][exName] < maxWeight) {
+        dataByDate[dateStr][exName] = maxWeight;
+      }
     });
-  }, [logs, selectedExercise]);
+    
+    return Object.values(dataByDate).sort((a, b) => new Date(a.rawDate) - new Date(b.rawDate));
+  }, [logs]);
+
+  const COLORS = ['#8884d8', '#82ca9d', '#ffc658', '#ff8042', '#0088fe', '#00c49f', '#ffbb28', '#ff8042', '#a4de6c', '#d0ed57', '#8dd1e1', '#83a6ed', '#8d6e63', '#d4e157'];
 
   if (loading || analyticsLoading) return <div className="container flex justify-center mt-8">Loading...</div>;
 
@@ -182,24 +224,8 @@ const Progress = () => {
         </div>
       ) : (
         <div className="grid grid-cols-3 gap-8">
-          <div className="glass-panel p-6 col-span-full md-col-span-1">
-            <h3 className="mb-4">Select Exercise</h3>
-            <div className="flex flex-col gap-2" style={{ maxHeight: '400px', overflowY: 'auto' }}>
-              {exercises.map(ex => (
-                <button
-                  key={ex._id}
-                  className={`btn ${selectedExercise === ex._id ? 'btn-primary' : 'btn-outline'} w-full`}
-                  style={{ justifyContent: 'flex-start' }}
-                  onClick={() => setSelectedExercise(ex._id)}
-                >
-                  {ex.name}
-                </button>
-              ))}
-            </div>
-          </div>
-          
-          <div className="glass-panel p-6 col-span-full md-col-span-2">
-            <h3 className="mb-4">Max Weight Trend (Overall Progression)</h3>
+          <div className="glass-panel p-6 col-span-full md-col-span-3">
+            <h3 className="mb-4">Max Weight Trend (All Exercises)</h3>
             <div style={{ width: '100%', height: '400px' }}>
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={chartData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
@@ -211,7 +237,19 @@ const Progress = () => {
                     itemStyle={{ color: 'var(--text-main)' }}
                   />
                   <Legend />
-                  <Line type="monotone" dataKey="maxWeight" name="Max Weight" stroke="var(--primary)" strokeWidth={3} dot={{ r: 6, fill: 'var(--primary)' }} activeDot={{ r: 8 }} />
+                  {exercises.map((ex, index) => (
+                    <Line 
+                      key={ex._id}
+                      type="monotone" 
+                      dataKey={ex.name} 
+                      name={ex.name} 
+                      stroke={COLORS[index % COLORS.length]} 
+                      strokeWidth={2} 
+                      connectNulls={true}
+                      dot={{ r: 4 }} 
+                      activeDot={{ r: 6 }} 
+                    />
+                  ))}
                 </LineChart>
               </ResponsiveContainer>
             </div>
@@ -249,7 +287,7 @@ const Progress = () => {
                   <tr style={{ borderBottom: '1px solid var(--border)' }}>
                     <th className="p-3">Date</th>
                     <th className="p-3">Exercise</th>
-                    <th className="p-3">Sets Logged</th>
+                    <th className="p-3">Sets</th>
                     <th className="p-3 text-right">Actions</th>
                   </tr>
                 </thead>
@@ -258,11 +296,65 @@ const Progress = () => {
                     <tr key={log._id} style={{ borderBottom: '1px solid var(--glass-border)' }}>
                       <td className="p-3">{formatDate(log.date)} {new Date(log.date).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</td>
                       <td className="p-3">{log.exerciseId?.name || 'Unknown Exercise'}</td>
-                      <td className="p-3">{log.sets.length}</td>
-                      <td className="p-3 text-right">
-                        <button className="btn btn-danger" style={{ padding: '0.5rem' }} onClick={() => handleDeleteLog(log._id)}>
-                          <Trash2 size={16} />
-                        </button>
+                      <td className="p-3">
+                        {editingLogId === log._id ? (
+                          <div className="flex flex-col gap-2">
+                            {editSets.map((set, idx) => (
+                              <div key={idx} className="flex gap-2 items-center">
+                                <input
+                                  type="number"
+                                  className="p-1 rounded bg-black/20 border border-[var(--border)] w-16"
+                                  placeholder="Lbs"
+                                  value={set.weight}
+                                  onChange={(e) => handleSetChange(idx, 'weight', Number(e.target.value))}
+                                />
+                                <span>lbs ×</span>
+                                <input
+                                  type="text"
+                                  className="p-1 rounded bg-black/20 border border-[var(--border)] w-16"
+                                  placeholder="Reps"
+                                  value={set.reps}
+                                  onChange={(e) => handleSetChange(idx, 'reps', e.target.value)}
+                                />
+                                <button className="btn btn-outline" style={{ padding: '0.2rem' }} onClick={() => handleRemoveSet(idx)}>
+                                  <X size={14} />
+                                </button>
+                              </div>
+                            ))}
+                            <button className="btn btn-outline" style={{ padding: '0.2rem 0.5rem', width: 'fit-content' }} onClick={handleAddSet}>
+                              <Plus size={14} className="inline mr-1" /> Add Set
+                            </button>
+                          </div>
+                        ) : (
+                          <div className="flex flex-col gap-1">
+                            {log.sets.map((set, idx) => (
+                              <div key={idx} className="text-sm">
+                                Set {idx + 1}: {set.weight} lbs × {set.reps} reps
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </td>
+                      <td className="p-3 text-right" style={{ verticalAlign: 'top' }}>
+                        {editingLogId === log._id ? (
+                          <div className="flex justify-end gap-2">
+                            <button className="btn btn-primary" style={{ padding: '0.5rem' }} onClick={() => handleSaveEdit(log._id)}>
+                              <Check size={16} />
+                            </button>
+                            <button className="btn btn-outline" style={{ padding: '0.5rem' }} onClick={handleCancelEdit}>
+                              <X size={16} />
+                            </button>
+                          </div>
+                        ) : (
+                          <div className="flex justify-end gap-2">
+                            <button className="btn btn-outline" style={{ padding: '0.5rem' }} onClick={() => handleEditClick(log)}>
+                              <Edit size={16} />
+                            </button>
+                            <button className="btn btn-danger" style={{ padding: '0.5rem' }} onClick={() => handleDeleteLog(log._id)}>
+                              <Trash2 size={16} />
+                            </button>
+                          </div>
+                        )}
                       </td>
                     </tr>
                   ))}

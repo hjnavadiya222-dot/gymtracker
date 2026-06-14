@@ -71,6 +71,28 @@ const deleteWorkoutLog = async (req, res) => {
   }
 };
 
+// Update a workout log
+const updateWorkoutLog = async (req, res) => {
+  try {
+    const { sets } = req.body;
+    const log = await WorkoutLog.findById(req.params.id);
+    if (!log) {
+      return res.status(404).json({ message: 'Log not found' });
+    }
+    
+    if (log.userId.toString() !== req.user._id.toString()) {
+      return res.status(401).json({ message: 'Not authorized' });
+    }
+
+    log.sets = sets;
+    await log.save();
+
+    res.json(log);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 // Log cardio session
 const saveCardioLog = async (req, res) => {
   const { distance, calories, duration } = req.body;
@@ -97,4 +119,4 @@ const getCardioLogs = async (req, res) => {
   }
 };
 
-module.exports = { getRoutines, saveWorkoutLog, getProgress, getExercises, deleteWorkoutLog, saveCardioLog, getCardioLogs };
+module.exports = { getRoutines, saveWorkoutLog, getProgress, getExercises, deleteWorkoutLog, updateWorkoutLog, saveCardioLog, getCardioLogs };
