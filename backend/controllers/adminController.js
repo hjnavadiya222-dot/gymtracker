@@ -52,7 +52,7 @@ const seedDatabase = async (req, res) => {
   try {
     const seedData = [
       { "day": "Day 1 - Mon", "bodyParts": ["Chest", "Triceps", "Shoulders"], "exercises": [
-        { "name": "Bench press", "bodyPart": "Chest", "sets": 4, "reps": "6-8" },
+        { "name": "Bench press", "bodyPart": "Chest", "sets": 3, "reps": "6-8" },
         { "name": "Incline dumbbell press", "bodyPart": "Chest", "sets": 3, "reps": "8-10" },
         { "name": "Decline bench press", "bodyPart": "Chest", "sets": 3, "reps": "8-10" },
         { "name": "Cable fly", "bodyPart": "Chest", "sets": 3, "reps": "12" },
@@ -65,7 +65,8 @@ const seedDatabase = async (req, res) => {
         { "name": "Pull-ups", "bodyPart": "Back", "sets": 4, "reps": "6-8" },
         { "name": "Barbell row", "bodyPart": "Back", "sets": 3, "reps": "8-10" },
         { "name": "Lat pulldown", "bodyPart": "Back", "sets": 3, "reps": "10" },
-        { "name": "Barbell curl", "bodyPart": "Biceps", "sets": 3, "reps": "10" },
+        { "name": "Preacher Curl", "bodyPart": "Biceps", "sets": 3, "reps": "10" },
+        { "name": "Incline barbell curl", "bodyPart": "Biceps", "sets": 3, "reps": "10-12" },
         { "name": "Hammer curl", "bodyPart": "Biceps", "sets": 3, "reps": "12" },
         { "name": "Dumbbell shrugs", "bodyPart": "Traps", "sets": 3, "reps": "12" }
       ]},
@@ -79,7 +80,7 @@ const seedDatabase = async (req, res) => {
       ]},
       { "day": "Day 4 - Thu", "bodyParts": ["Chest", "Triceps", "Shoulders"], "exercises": [
         { "name": "Incline dumbbell press", "bodyPart": "Chest", "sets": 4, "reps": "8-10" },
-        { "name": "Bench press", "bodyPart": "Chest", "sets": 4, "reps": "8-10" },
+        { "name": "Bench press", "bodyPart": "Chest", "sets": 3, "reps": "8-10" },
         { "name": "Decline bench press", "bodyPart": "Chest", "sets": 3, "reps": "8-10" },
         { "name": "Pec deck fly", "bodyPart": "Chest", "sets": 3, "reps": "10-12" },
         { "name": "Cable fly", "bodyPart": "Chest", "sets": 3, "reps": "12" },
@@ -93,7 +94,7 @@ const seedDatabase = async (req, res) => {
         { "name": "Lat pulldown", "bodyPart": "Back", "sets": 4, "reps": "10" },
         { "name": "Seated cable row", "bodyPart": "Back", "sets": 3, "reps": "10" },
         { "name": "Chest-supported row", "bodyPart": "Back", "sets": 3, "reps": "10-12" },
-        { "name": "Barbell curl", "bodyPart": "Biceps", "sets": 3, "reps": "10-12" },
+        { "name": "Preacher Curl", "bodyPart": "Biceps", "sets": 3, "reps": "10-12" },
         { "name": "Incline dumbbell curl", "bodyPart": "Biceps", "sets": 3, "reps": "10-12" },
         { "name": "Hammer curl", "bodyPart": "Biceps", "sets": 3, "reps": "10-12" },
         { "name": "Lateral raise", "bodyPart": "Shoulders", "sets": 3, "reps": "15" },
