@@ -202,8 +202,8 @@ const Progress = () => {
                       <tr key={idx} style={{ borderBottom: '1px solid var(--glass-border)' }}>
                         <td className="p-2">{item.exerciseName}</td>
                         <td className="p-2">{item.bodyPart}</td>
-                        <td className="p-2">{item.lastWeekE1RM} lbs</td>
-                        <td className="p-2">{item.currentWeekE1RM} lbs</td>
+                        <td className="p-2">{item.lastWeekE1RM} kgs</td>
+                        <td className="p-2">{item.currentWeekE1RM} kgs</td>
                         <td className="p-2 font-bold" style={{
                           color: item.status === 'Increased' ? '#4ade80' : item.status === 'Decreased' ? '#f87171' : 'var(--text-muted)'
                         }}>{item.status}</td>
@@ -304,11 +304,11 @@ const Progress = () => {
                                 <input
                                   type="number"
                                   className="p-1 rounded bg-black/20 border border-[var(--border)] w-16"
-                                  placeholder="Lbs"
+                                  placeholder="Kgs"
                                   value={set.weight}
                                   onChange={(e) => handleSetChange(idx, 'weight', Number(e.target.value))}
                                 />
-                                <span>lbs ×</span>
+                                <span>kgs ×</span>
                                 <input
                                   type="text"
                                   className="p-1 rounded bg-black/20 border border-[var(--border)] w-16"
@@ -329,7 +329,7 @@ const Progress = () => {
                           <div className="flex flex-col gap-1">
                             {log.sets.map((set, idx) => (
                               <div key={idx} className="text-sm">
-                                Set {idx + 1}: {set.weight} lbs × {set.reps} reps
+                                Set {idx + 1}: {set.weight} kgs × {set.reps} reps
                               </div>
                             ))}
                           </div>

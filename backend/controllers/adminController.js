@@ -89,7 +89,7 @@ const seedDatabase = async (req, res) => {
         { "name": "Rear delt fly", "bodyPart": "Shoulders", "sets": 3, "reps": "15" },
         { "name": "Dumbbell overhead press", "bodyPart": "Shoulders", "sets": 3, "reps": "10" }
       ]},
-      { "day": "Day 5 - Fri", "bodyParts": ["Back", "Biceps", "Shoulders"], "exercises": [
+      { "day": "Day 5 - Fri", "bodyParts": ["Back", "Biceps", "Shoulders", "Traps"], "exercises": [
         { "name": "Lat pulldown", "bodyPart": "Back", "sets": 4, "reps": "10" },
         { "name": "Seated cable row", "bodyPart": "Back", "sets": 3, "reps": "10" },
         { "name": "Chest-supported row", "bodyPart": "Back", "sets": 3, "reps": "10-12" },
@@ -100,7 +100,7 @@ const seedDatabase = async (req, res) => {
         { "name": "Dumbbell shrugs", "bodyPart": "Traps", "sets": 3, "reps": "12" }
       ]},
       { "day": "Day 6 - Sat", "bodyParts": ["Shoulders", "Core", "Abs"], "exercises": [
-        { "name": "Barbell overhead press", "bodyPart": "Shoulders", "sets": 3, "reps": "8" },
+        { "name": "Dumbbell overhead press", "bodyPart": "Shoulders", "sets": 3, "reps": "8" },
         { "name": "Plank", "bodyPart": "Core", "sets": 3, "reps": "60s" },
         { "name": "Hanging leg raise", "bodyPart": "Core", "sets": 3, "reps": "15" },
         { "name": "Crunches", "bodyPart": "Core", "sets": 3, "reps": "20" },
