@@ -62,7 +62,7 @@ const seedDatabase = async (req, res) => {
         { "name": "Face pulls", "bodyPart": "Shoulders", "sets": 3, "reps": "15" }
       ]},
       { "day": "Day 2 - Tue", "bodyParts": ["Back", "Biceps", "Traps"], "exercises": [
-        { "name": "Pull-ups", "bodyPart": "Back", "sets": 4, "reps": "6-8" },
+        { "name": "Pull-ups", "bodyPart": "Back", "sets": 3, "reps": "6-8" },
         { "name": "Barbell row", "bodyPart": "Back", "sets": 3, "reps": "8-10" },
         { "name": "Lat pulldown", "bodyPart": "Back", "sets": 3, "reps": "10" },
         { "name": "Seated cable row", "bodyPart": "Back", "sets": 3, "reps": "10" },
@@ -74,14 +74,14 @@ const seedDatabase = async (req, res) => {
       ]},
       { "day": "Day 3 - Wed", "bodyParts": ["Quads", "Hamstrings", "Calves"], "exercises": [
         { "name": "Hack Squat", "bodyPart": "Quads", "sets": 3, "reps": "6-8" },
-        { "name": "Leg press", "bodyPart": "Quads", "sets": 4, "reps": "10" },
+        { "name": "Leg press", "bodyPart": "Quads", "sets": 3, "reps": "10" },
         { "name": "Leg extension", "bodyPart": "Quads", "sets": 3, "reps": "12" },
         { "name": "Romanian Deadlifts", "bodyPart": "Hamstrings", "sets": 3, "reps": "10" },
         { "name": "Leg curl", "bodyPart": "Hamstrings", "sets": 3, "reps": "12" },
         { "name": "Seated calf raise", "bodyPart": "Calves", "sets": 3, "reps": "15" }
       ]},
       { "day": "Day 4 - Thu", "bodyParts": ["Chest", "Triceps", "Shoulders"], "exercises": [
-        { "name": "Incline dumbbell press", "bodyPart": "Chest", "sets": 4, "reps": "8-10" },
+        { "name": "Incline dumbbell press", "bodyPart": "Chest", "sets": 3, "reps": "8-10" },
         { "name": "Bench press", "bodyPart": "Chest", "sets": 3, "reps": "8-10" },
         { "name": "Decline bench press", "bodyPart": "Chest", "sets": 3, "reps": "8-10" },
         { "name": "Pec deck fly", "bodyPart": "Chest", "sets": 3, "reps": "10-12" },
@@ -93,7 +93,7 @@ const seedDatabase = async (req, res) => {
         { "name": "Dumbbell overhead press", "bodyPart": "Shoulders", "sets": 3, "reps": "10" }
       ]},
       { "day": "Day 5 - Fri", "bodyParts": ["Back", "Biceps", "Shoulders", "Traps"], "exercises": [
-        { "name": "Lat pulldown", "bodyPart": "Back", "sets": 4, "reps": "10" },
+        { "name": "Lat pulldown", "bodyPart": "Back", "sets": 3, "reps": "10" },
         { "name": "Seated cable row", "bodyPart": "Back", "sets": 3, "reps": "10" },
         { "name": "Chest-supported row", "bodyPart": "Back", "sets": 3, "reps": "10-12" },
         { "name": "Preacher Curl", "bodyPart": "Biceps", "sets": 3, "reps": "10-12" },
