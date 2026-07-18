@@ -20,6 +20,8 @@ const seedData = [
     { "name": "Pull-ups", "bodyPart": "Back", "sets": 4, "reps": "6-8" },
     { "name": "Barbell row", "bodyPart": "Back", "sets": 3, "reps": "8-10" },
     { "name": "Lat pulldown", "bodyPart": "Back", "sets": 3, "reps": "10" },
+    { "name": "Seated cable row", "bodyPart": "Back", "sets": 3, "reps": "10" },
+    { "name": "Chest-supported row", "bodyPart": "Back", "sets": 3, "reps": "10-12" },
     { "name": "Preacher Curl", "bodyPart": "Biceps", "sets": 3, "reps": "10" },
     { "name": "Incline barbell curl", "bodyPart": "Biceps", "sets": 3, "reps": "10-12" },
     { "name": "Hammer curl", "bodyPart": "Biceps", "sets": 3, "reps": "12" },
