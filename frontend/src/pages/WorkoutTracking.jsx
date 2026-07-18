@@ -4,6 +4,14 @@ import axios from 'axios';
 import { AuthContext } from '../contexts/AuthContext';
 import { Save, ArrowLeft, CheckCircle, Activity } from 'lucide-react';
 
+const formatDate = (dateString) => {
+  const d = new Date(dateString);
+  const dd = String(d.getDate()).padStart(2, '0');
+  const mm = String(d.getMonth() + 1).padStart(2, '0');
+  const yyyy = d.getFullYear();
+  return `${dd}/${mm}/${yyyy}`;
+};
+
 const WorkoutTracking = () => {
   const { state } = useLocation();
   const navigate = useNavigate();
@@ -11,6 +19,22 @@ const WorkoutTracking = () => {
   const routine = state?.routine;
 
   const [selectedBodyPart, setSelectedBodyPart] = useState(routine?.bodyParts[0] || '');
+  const [history, setHistory] = useState([]);
+
+  useEffect(() => {
+    const fetchHistory = async () => {
+      try {
+        const config = { headers: { Authorization: `Bearer ${user.token}` } };
+        const { data } = await axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:5005'}/api/workout/progress`, config);
+        setHistory(data);
+      } catch (error) {
+        console.error('Error fetching history:', error);
+      }
+    };
+    if (user) {
+      fetchHistory();
+    }
+  }, [user]);
   
   // Initialize from localStorage if available
   const [logs, setLogs] = useState(() => {
@@ -53,6 +77,13 @@ const WorkoutTracking = () => {
       </div>
     );
   }
+
+  const getLastWorkoutForExercise = (exerciseId) => {
+    const exerciseLogs = history
+      .filter(log => log.exerciseId?._id === exerciseId || log.exerciseId === exerciseId)
+      .sort((a, b) => new Date(b.date) - new Date(a.date));
+    return exerciseLogs[0];
+  };
 
   const exercises = routine.exercises.filter(ex => ex.bodyPart === selectedBodyPart);
 
@@ -154,6 +185,32 @@ const WorkoutTracking = () => {
           {exercises.map((exercise, index) => (
             <div key={exercise._id} className={`card glass-panel delay-${(index % 3) * 100}`}>
               <h3 className="mb-4">{exercise.name} <span style={{ fontSize: '0.875rem', color: 'var(--text-muted)', fontWeight: 'normal' }}>({exercise.defaultSets} sets x {exercise.defaultReps})</span></h3>
+              
+              {/* Previous progress display for progressive overload */}
+              {(() => {
+                const lastLog = getLastWorkoutForExercise(exercise._id);
+                if (lastLog) {
+                  return (
+                    <div className="mb-4 p-3 rounded" style={{ backgroundColor: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
+                      <div className="text-sm font-semibold" style={{ color: 'var(--accent)', marginBottom: '0.5rem' }}>
+                        Last Time ({formatDate(lastLog.date)}):
+                      </div>
+                      <div className="flex flex-wrap gap-x-4 gap-y-1">
+                        {lastLog.sets.map((set, idx) => (
+                          <span key={idx} style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>
+                            Set {idx + 1}: <strong style={{ color: 'var(--text-main)' }}>{set.weight} kg</strong> × {set.reps} reps
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                }
+                return (
+                  <div className="mb-4 text-sm" style={{ color: 'var(--text-muted)', fontStyle: 'italic' }}>
+                    No previous history found for this exercise.
+                  </div>
+                );
+              })()}
               
               <div className="flex flex-col gap-4">
                 {Array.from({ length: exercise.defaultSets }).map((_, i) => (
