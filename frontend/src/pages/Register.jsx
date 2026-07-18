@@ -8,17 +8,25 @@ const Register = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const { register } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    const result = await register(username, email, password, 'user');
-    if (result.success) {
-      navigate('/');
-    } else {
-      setError(result.message);
+    setLoading(true);
+    try {
+      const result = await register(username, email, password, 'user');
+      if (result.success) {
+        navigate('/');
+      } else {
+        setError(result.message);
+      }
+    } catch (err) {
+      setError(err.message || 'Registration failed');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -42,6 +50,7 @@ const Register = () => {
               value={username} 
               onChange={(e) => setUsername(e.target.value)} 
               required 
+              disabled={loading}
             />
           </div>
           <div className="form-group">
@@ -52,6 +61,7 @@ const Register = () => {
               value={email} 
               onChange={(e) => setEmail(e.target.value)} 
               required 
+              disabled={loading}
             />
           </div>
           <div className="form-group mb-8">
@@ -62,10 +72,11 @@ const Register = () => {
               value={password} 
               onChange={(e) => setPassword(e.target.value)} 
               required 
+              disabled={loading}
             />
           </div>
-          <button type="submit" className="btn btn-primary w-full justify-center">
-            Sign Up
+          <button type="submit" className="btn btn-primary w-full justify-center" disabled={loading}>
+            {loading ? 'Registering...' : 'Sign Up'}
           </button>
         </form>
         

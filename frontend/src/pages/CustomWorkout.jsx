@@ -20,7 +20,7 @@ const CustomWorkout = () => {
   const [sessionBlocks, setSessionBlocks] = useState(() => {
     const saved = localStorage.getItem("draft_custom_session");
     if (saved) {
-      try { return JSON.parse(saved); } catch (e) {}
+      try { return JSON.parse(saved); } catch { return []; }
     }
     return [];
   });
@@ -28,7 +28,7 @@ const CustomWorkout = () => {
   const [logs, setLogs] = useState(() => {
     const saved = localStorage.getItem("draft_custom_logs");
     if (saved) {
-      try { return JSON.parse(saved); } catch (e) {}
+      try { return JSON.parse(saved); } catch { return {}; }
     }
     return {};
   });
@@ -36,7 +36,7 @@ const CustomWorkout = () => {
   const [cardio, setCardio] = useState(() => {
     const saved = localStorage.getItem("draft_custom_cardio");
     if (saved) {
-      try { return JSON.parse(saved); } catch (e) {}
+      try { return JSON.parse(saved); } catch { return { distance: '', calories: '', duration: '' }; }
     }
     return { distance: '', calories: '', duration: '' };
   });

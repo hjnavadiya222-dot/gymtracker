@@ -17,7 +17,7 @@ const WorkoutTracking = () => {
     if (!routine) return {};
     const saved = localStorage.getItem("draft_workout_" + routine._id);
     if (saved) {
-      try { return JSON.parse(saved); } catch (e) {}
+      try { return JSON.parse(saved); } catch { return {}; }
     }
     return {};
   });
@@ -26,7 +26,7 @@ const WorkoutTracking = () => {
     if (!routine) return { distance: '', calories: '', duration: '' };
     const saved = localStorage.getItem("draft_cardio_" + routine._id);
     if (saved) {
-      try { return JSON.parse(saved); } catch (e) {}
+      try { return JSON.parse(saved); } catch { return { distance: '', calories: '', duration: '' }; }
     }
     return { distance: '', calories: '', duration: '' };
   });

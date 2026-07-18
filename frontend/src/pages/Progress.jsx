@@ -20,6 +20,8 @@ const Progress = () => {
   const [cardioLogs, setCardioLogs] = useState([]);
   const [editingLogId, setEditingLogId] = useState(null);
   const [editSets, setEditSets] = useState([]);
+  const [editingCardioId, setEditingCardioId] = useState(null);
+  const [editCardio, setEditCardio] = useState({ distance: '', calories: '', duration: '' });
   const { user } = useContext(AuthContext);
 
   useEffect(() => {
@@ -113,6 +115,49 @@ const Progress = () => {
     const newSets = [...editSets];
     newSets.splice(index, 1);
     setEditSets(newSets);
+  };
+
+  const handleDeleteCardio = async (id) => {
+    if (window.confirm('Are you sure you want to delete this cardio log?')) {
+      try {
+        const config = { headers: { Authorization: `Bearer ${user.token}` } };
+        await axios.delete(`${import.meta.env.VITE_API_URL || 'http://localhost:5005'}/api/workout/cardio/${id}`, config);
+        setCardioLogs(cardioLogs.filter(log => log._id !== id));
+      } catch (error) {
+        console.error('Error deleting cardio log:', error);
+      }
+    }
+  };
+
+  const handleEditCardioClick = (log) => {
+    setEditingCardioId(log._id);
+    setEditCardio({
+      distance: log.distance,
+      calories: log.calories,
+      duration: log.duration,
+    });
+  };
+
+  const handleCancelCardioEdit = () => {
+    setEditingCardioId(null);
+    setEditCardio({ distance: '', calories: '', duration: '' });
+  };
+
+  const handleSaveCardioEdit = async (id) => {
+    try {
+      const config = { headers: { Authorization: `Bearer ${user.token}` } };
+      const { data } = await axios.put(`${import.meta.env.VITE_API_URL || 'http://localhost:5005'}/api/workout/cardio/${id}`, editCardio, config);
+      setCardioLogs(cardioLogs.map(log => log._id === id ? data : log));
+      setEditingCardioId(null);
+      setEditCardio({ distance: '', calories: '', duration: '' });
+    } catch (error) {
+      console.error('Error updating cardio log:', error);
+      alert('Failed to update cardio log');
+    }
+  };
+
+  const handleCardioChange = (field, value) => {
+    setEditCardio({ ...editCardio, [field]: value });
   };
 
   // Extract unique exercises from logs
@@ -378,15 +423,70 @@ const Progress = () => {
                       <th className="p-3">Distance (km)</th>
                       <th className="p-3">Calories</th>
                       <th className="p-3">Time (min)</th>
+                      <th className="p-3 text-right">Actions</th>
                     </tr>
                   </thead>
                   <tbody>
                     {[...cardioLogs].sort((a,b) => new Date(b.date) - new Date(a.date)).map(log => (
                       <tr key={log._id} style={{ borderBottom: '1px solid var(--glass-border)' }}>
-                        <td className="p-3">{formatDate(log.date)} {new Date(log.date).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</td>
-                        <td className="p-3">{log.distance}</td>
-                        <td className="p-3">{log.calories}</td>
-                        <td className="p-3">{log.duration}</td>
+                        <td className="p-3" style={{ verticalAlign: editingCardioId === log._id ? 'middle' : 'top' }}>{formatDate(log.date)} {new Date(log.date).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</td>
+                        <td className="p-3">
+                          {editingCardioId === log._id ? (
+                            <input
+                              type="number"
+                              className="p-1 rounded bg-black/20 border border-[var(--border)] w-24"
+                              value={editCardio.distance}
+                              onChange={(e) => handleCardioChange('distance', Number(e.target.value))}
+                            />
+                          ) : (
+                            log.distance
+                          )}
+                        </td>
+                        <td className="p-3">
+                          {editingCardioId === log._id ? (
+                            <input
+                              type="number"
+                              className="p-1 rounded bg-black/20 border border-[var(--border)] w-24"
+                              value={editCardio.calories}
+                              onChange={(e) => handleCardioChange('calories', Number(e.target.value))}
+                            />
+                          ) : (
+                            log.calories
+                          )}
+                        </td>
+                        <td className="p-3">
+                          {editingCardioId === log._id ? (
+                            <input
+                              type="number"
+                              className="p-1 rounded bg-black/20 border border-[var(--border)] w-24"
+                              value={editCardio.duration}
+                              onChange={(e) => handleCardioChange('duration', Number(e.target.value))}
+                            />
+                          ) : (
+                            log.duration
+                          )}
+                        </td>
+                        <td className="p-3 text-right" style={{ verticalAlign: 'top' }}>
+                          {editingCardioId === log._id ? (
+                            <div className="flex justify-end gap-2">
+                              <button className="btn btn-primary" style={{ padding: '0.5rem' }} onClick={() => handleSaveCardioEdit(log._id)}>
+                                <Check size={16} />
+                              </button>
+                              <button className="btn btn-outline" style={{ padding: '0.5rem' }} onClick={handleCancelCardioEdit}>
+                                <X size={16} />
+                              </button>
+                            </div>
+                          ) : (
+                            <div className="flex justify-end gap-2">
+                              <button className="btn btn-outline" style={{ padding: '0.5rem' }} onClick={() => handleEditCardioClick(log)}>
+                                <Edit size={16} />
+                              </button>
+                              <button className="btn btn-danger" style={{ padding: '0.5rem' }} onClick={() => handleDeleteCardio(log._id)}>
+                                <Trash2 size={16} />
+                              </button>
+                            </div>
+                          )}
+                        </td>
                       </tr>
                     ))}
                   </tbody>

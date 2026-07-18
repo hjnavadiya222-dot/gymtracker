@@ -119,4 +119,59 @@ const getCardioLogs = async (req, res) => {
   }
 };
 
-module.exports = { getRoutines, saveWorkoutLog, getProgress, getExercises, deleteWorkoutLog, updateWorkoutLog, saveCardioLog, getCardioLogs };
+// Delete a cardio log
+const deleteCardioLog = async (req, res) => {
+  try {
+    const log = await CardioLog.findById(req.params.id);
+    if (!log) {
+      return res.status(404).json({ message: 'Log not found' });
+    }
+    
+    // Check if the user owns this log
+    if (log.userId.toString() !== req.user._id.toString()) {
+      return res.status(401).json({ message: 'Not authorized' });
+    }
+
+    await log.deleteOne();
+    res.json({ message: 'Cardio log removed successfully' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Update a cardio log
+const updateCardioLog = async (req, res) => {
+  try {
+    const { distance, calories, duration } = req.body;
+    const log = await CardioLog.findById(req.params.id);
+    if (!log) {
+      return res.status(404).json({ message: 'Log not found' });
+    }
+    
+    if (log.userId.toString() !== req.user._id.toString()) {
+      return res.status(401).json({ message: 'Not authorized' });
+    }
+
+    log.distance = Number(distance);
+    log.calories = Number(calories);
+    log.duration = Number(duration);
+    await log.save();
+
+    res.json(log);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+module.exports = { 
+  getRoutines, 
+  saveWorkoutLog, 
+  getProgress, 
+  getExercises, 
+  deleteWorkoutLog, 
+  updateWorkoutLog, 
+  saveCardioLog, 
+  getCardioLogs,
+  deleteCardioLog,
+  updateCardioLog
+};

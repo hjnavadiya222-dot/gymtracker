@@ -1,28 +1,36 @@
-import { createContext, useState, useEffect } from 'react';
+import { createContext, useState } from 'react';
 import axios from 'axios';
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const userInfo = localStorage.getItem('userInfo');
-    if (userInfo) {
-      setUser(JSON.parse(userInfo));
+  const [user, setUser] = useState(() => {
+    try {
+      const userInfo = localStorage.getItem('userInfo');
+      return userInfo ? JSON.parse(userInfo) : null;
+    } catch {
+      return null;
     }
-    setLoading(false);
-  }, []);
+  });
+  const [loading] = useState(false);
 
   const login = async (email, password) => {
     try {
       const { data } = await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:5005'}` + '/api/auth/login', { email, password });
       setUser(data);
-      localStorage.setItem('userInfo', JSON.stringify(data));
+      try {
+        localStorage.setItem('userInfo', JSON.stringify(data));
+      } catch (storageError) {
+        console.warn('localStorage is not available for writing:', storageError);
+      }
       return { success: true };
     } catch (error) {
-      return { success: false, message: error.response?.data?.message || 'Login failed' };
+      console.error('Login error details:', error);
+      return { 
+        success: false, 
+        message: error.response?.data?.message || error.message || 'Login failed' 
+      };
     }
   };
 
@@ -30,7 +38,11 @@ export const AuthProvider = ({ children }) => {
     try {
       const { data } = await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:5005'}` + '/api/auth/register', { username, email, password, role });
       setUser(data);
-      localStorage.setItem('userInfo', JSON.stringify(data));
+      try {
+        localStorage.setItem('userInfo', JSON.stringify(data));
+      } catch (storageError) {
+        console.warn('localStorage is not available for writing:', storageError);
+      }
       return { success: true };
     } catch (error) {
       // 1. FRONTEND DEBUGGING: Log the exact error object and backend response
@@ -38,13 +50,20 @@ export const AuthProvider = ({ children }) => {
       if (error.response) {
         console.error('Backend Response Data:', error.response.data);
       }
-      return { success: false, message: error.response?.data?.message || 'Registration failed' };
+      return { 
+        success: false, 
+        message: error.response?.data?.message || error.message || 'Registration failed' 
+      };
     }
   };
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem('userInfo');
+    try {
+      localStorage.removeItem('userInfo');
+    } catch (storageError) {
+      console.warn('localStorage is not available for writing:', storageError);
+    }
   };
 
   return (

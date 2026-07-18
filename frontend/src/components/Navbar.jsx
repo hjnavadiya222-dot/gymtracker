@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Activity, LogOut, User } from 'lucide-react';
+import { Activity, LogOut } from 'lucide-react';
 import { AuthContext } from '../contexts/AuthContext';
 
 const Navbar = () => {
